@@ -44,35 +44,35 @@ case class NetflowV5Record (
 
 object NetflowV5Record {
 
-	 def apply(byteBuffer: ByteBuffer, offset: Int) : NetflowV5Record =  {
-			NetflowV5Record(byteBuffer.getInt(offset + 0),
-										byteBuffer.getInt(offset + 4),
-										byteBuffer.getInt(offset + 8),
-										byteBuffer.getShort(offset + 12),
-										byteBuffer.getShort(offset + 14),
-										byteBuffer.getInt(offset + 16),
-										byteBuffer.getInt(offset + 20),
-										byteBuffer.getInt(offset + 24),
-										byteBuffer.getInt(offset + 28),
-										byteBuffer.getShort(offset + 30),
-										byteBuffer.getShort(offset + 32),
-										byteBuffer.get(offset + 34),
-										byteBuffer.get(offset + 35),
-										byteBuffer.get(offset + 36),
-										byteBuffer.get(offset + 37),
-										byteBuffer.getShort(offset + 38),
-										byteBuffer.getShort(offset + 40),
-										byteBuffer.get(offset + 42),
-										byteBuffer.get(offset + 43),
-										byteBuffer.getShort(offset + 44)
-			 )
-	}
+   def apply(byteBuffer: ByteBuffer, offset: Int) : NetflowV5Record =  {
+      NetflowV5Record(byteBuffer.getInt(offset + 0),
+                    byteBuffer.getInt(offset + 4),
+                    byteBuffer.getInt(offset + 8),
+                    byteBuffer.getShort(offset + 12),
+                    byteBuffer.getShort(offset + 14),
+                    byteBuffer.getInt(offset + 16),
+                    byteBuffer.getInt(offset + 20),
+                    byteBuffer.getInt(offset + 24),
+                    byteBuffer.getInt(offset + 28),
+                    byteBuffer.getShort(offset + 30),
+                    byteBuffer.getShort(offset + 32),
+                    byteBuffer.get(offset + 34),
+                    byteBuffer.get(offset + 35),
+                    byteBuffer.get(offset + 36),
+                    byteBuffer.get(offset + 37),
+                    byteBuffer.getShort(offset + 38),
+                    byteBuffer.getShort(offset + 40),
+                    byteBuffer.get(offset + 42),
+                    byteBuffer.get(offset + 43),
+                    byteBuffer.getShort(offset + 44)
+       )
+  }
 }
 
 object NetflowV5Parser {
 
   private val netflowHeaderSize = 24
-	private val netflowRecordSize = 48
+  private val netflowRecordSize = 48
 
   def intToIp(i:Int) :String = {
     return ((i >> 24 ) & 0xFF) + "." +
@@ -81,21 +81,21 @@ object NetflowV5Parser {
          (i & 0xFF)
   }
 
-	def apply(byteBuffer: ByteBuffer, pktLength: Int): ArrayBuffer[NetflowV5Record] = {
+  def apply(byteBuffer: ByteBuffer, pktLength: Int): ArrayBuffer[NetflowV5Record] = {
 
-		val version = byteBuffer.getShort(0)
+    val version = byteBuffer.getShort(0)
 
-		var v5Records = ArrayBuffer[NetflowV5Record]()
-  	if (version == 5){
-			// netflow V5 packet 
-			// read netflow record count 
-    	var netflowRecordCount = byteBuffer.getShort(2)
-    	var offset = netflowHeaderSize;
+    var v5Records = ArrayBuffer[NetflowV5Record]()
+    if (version == 5){
+      // netflow V5 packet 
+      // read netflow record count 
+      var netflowRecordCount = byteBuffer.getShort(2)
+      var offset = netflowHeaderSize;
       //println("No of netflow records netflowRecordCount" + netflowRecordCount)
-    	for (i <- 1 to netflowRecordCount) {
-				v5Records += NetflowV5Record(byteBuffer, offset)	
-			}
+      for (i <- 1 to netflowRecordCount) {
+        v5Records += NetflowV5Record(byteBuffer, offset)  
+      }
     } 
-		v5Records
-	}
+    v5Records
+  }
 }
